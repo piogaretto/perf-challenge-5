@@ -1,7 +1,7 @@
 # Pruebas de rendimiento con JMeter
 
 ## Introducción
-Este repositorio orquesta un pipeline de testing de performance sobre la api [httpbin](http://httpbin.org/). Configurado para realizar todo de manera realista, verificando si pasa o no gates de calidad (P95 < 800ms y error % < 1%) y generando los resultados (.jtl e informe HTML).
+Este repositorio orquesta un pipeline de testing de performance sobre la api [httpbin](http://httpbin.org/). Configurado para realizar todo de manera realista, verificando si pasa o no gates de calidad (P95 < 500ms y error % < 1%) y generando los resultados (.jtl e informe HTML).
 
 ### Se prueban los siguientes endpoints en este pipeline.
   - /get
@@ -15,7 +15,7 @@ Este repositorio orquesta un pipeline de testing de performance sobre la api [ht
 ### SLAs
 
 
-- Latencia P95 < 800 ms
+- Latencia P95 < 500 ms
 - Rate de error	< 1 %
 - Throughput (RPS)	> 30 RPS
 - *Si falla 1 o más criterios el pipeline fallará.*
@@ -39,7 +39,7 @@ Ahora abre `results\html-report\index.html`
 
 ## Ejecución con Docker Compose
 - Asegurate de tener Docker instalado.
-- Usa el comando `docker compose run --rm -e THRESHOLD_P95=800 -e THRESHOLD_ERROR_RATE=1.0 -e THRESHOLD_THROUGHPUT=30 jmeter-run`
+- Usa el comando `docker compose run --rm -e THRESHOLD_P95=500 -e THRESHOLD_ERROR_RATE=1.0 -e THRESHOLD_THROUGHPUT=30 jmeter-run`
 - Aparecerá en terminal si se cumplen o no los gates de calidad.
 
 

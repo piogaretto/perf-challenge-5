@@ -8,7 +8,7 @@ services:
       - ./:/work:rw
 
     environment:
-      THRESHOLD_P95: "800"          # ms
+      THRESHOLD_P95: "500"          # ms
       THRESHOLD_ERROR_RATE: "1.0"   # %
       THRESHOLD_THROUGHPUT: "20"    # req/s
 
@@ -29,7 +29,7 @@ services:
       RESULTS_FILE=$${RESULTS_FILE:-results/results.jtl}
       REPORT_DIR=$${REPORT_DIR:-results/html-report}
       
-      THRESHOLD_P95=$${THRESHOLD_P95:-800}
+      THRESHOLD_P95=$${THRESHOLD_P95:-500}
       THRESHOLD_ERROR_RATE=$${THRESHOLD_ERROR_RATE:-1.0}
       THRESHOLD_THROUGHPUT=$${THRESHOLD_THROUGHPUT:-20}
 

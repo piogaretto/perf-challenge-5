@@ -92,7 +92,7 @@ jobs:
           EOF
 
           chmod +x validar.sh
-          LIM_P95=800 LIM_ERR=1.0 LIM_RPS=30 ./validar.sh
+          LIM_P95=500 LIM_ERR=1.0 LIM_RPS=30 ./validar.sh
 
       - name: Subir reporte HTML
         if: always()
