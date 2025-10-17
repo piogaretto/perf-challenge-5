@@ -26,7 +26,7 @@ Este repositorio orquesta un pipeline de testing de performance sobre la api [ht
 - Asegurate de tener jmeter en tu PATH
 ### Ejecutar el plan de pruebas
 
-`jmeter -n -t "plan-de-pruebas\main.jmx" -p "conf.properties"  -l "results\results.jtl"`
+`jmeter -n -t "plan-de-pruebas\main.jmx" -p "conf.properties"  -l "results\results.jtl" -f`
 
 - *Esto hace que genere los resultados en results\results.jtl.*
 

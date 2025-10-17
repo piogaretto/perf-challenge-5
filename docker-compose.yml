@@ -45,7 +45,7 @@ services:
         "$${JMETER_HOME}"/bin/jmeter -n \
           -t "/work/$${PLAN}" \
           -p "/work/$${PROPS}" \
-          -l "/work/$${RESULTS_FILE}"
+          -l "/work/$${RESULTS_FILE}" -f
       else
         "$${JMETER_HOME}"/bin/jmeter -n \
           -t "/work/$${PLAN}" \

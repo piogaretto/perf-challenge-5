@@ -133,7 +133,7 @@ $(document).ready(function() {
         widgets: ['zebra']
     });
 
-    var data = {"OkPercent": 50.293228110873834, "KoPercent": 49.706771889126166};
+    var data = {"OkPercent": 5.084745762711864, "KoPercent": 94.91525423728814};
     var dataset = [
         {
             "label" : "FAIL",
@@ -173,7 +173,7 @@ $(document).ready(function() {
     });
 
     // Creates APDEX table
-    createTable($("#apdexTable"), {"supportsControllersDiscrimination": true, "overall": {"data": [0.29995447105117673, 500, 1500, "Total"], "isController": false}, "titles": ["Apdex", "T (Toleration threshold)", "F (Frustration threshold)", "Label"], "items": [{"data": [0.2979339746392654, 500, 1500, "Base64 encode test"], "isController": false}, {"data": [0.30462003454231434, 500, 1500, "POST"], "isController": false}, {"data": [0.2943784597194604, 500, 1500, "GET"], "isController": false}, {"data": [0.30066139000325276, 500, 1500, "PATCH"], "isController": false}, {"data": [0.30219899847594167, 500, 1500, "PUT"], "isController": false}]}, function(index, item){
+    createTable($("#apdexTable"), {"supportsControllersDiscrimination": true, "overall": {"data": [0.006829027480664802, 500, 1500, "Total"], "isController": false}, "titles": ["Apdex", "T (Toleration threshold)", "F (Frustration threshold)", "Label"], "items": [{"data": [0.007890365448504983, 500, 1500, "Base64 encode test"], "isController": false}, {"data": [0.006950122649223222, 500, 1500, "POST"], "isController": false}, {"data": [0.005284552845528455, 500, 1500, "GET"], "isController": false}, {"data": [0.00741962077493817, 500, 1500, "PATCH"], "isController": false}, {"data": [0.006628003314001657, 500, 1500, "PUT"], "isController": false}]}, function(index, item){
         switch(index){
             case 0:
                 item = item.toFixed(3);
@@ -187,7 +187,7 @@ $(document).ready(function() {
     }, [[0, 0]], 3);
 
     // Create statistics table
-    createTable($("#statisticsTable"), {"supportsControllersDiscrimination": true, "overall": {"data": ["Total", 92249, 45854, 49.706771889126166, 1431.5713991479715, 407, 72694, 434.0, 1924.9000000000015, 4623.700000000019, 43425.19000000077, 1.0640369033452195, 0.4750250530961612, 0.18640474163744725], "isController": false}, "titles": ["Label", "#Samples", "FAIL", "Error %", "Average", "Min", "Max", "Median", "90th pct", "95th pct", "99th pct", "Transactions/s", "Received", "Sent"], "items": [{"data": ["Base64 encode test", 18296, 9150, 50.010931351115, 1424.5613248797495, 408, 70663, 420.0, 1535.0, 2540.0, 28103.23999999964, 0.21109297993888665, 0.059935764114013426, 0.0292726593274628], "isController": false}, {"data": ["POST", 18528, 9182, 49.55742659758204, 1422.0739421416263, 408, 72634, 420.0, 1521.1000000000022, 2536.649999999998, 29835.0, 0.2137568426157677, 0.1099763436240809, 0.04433573598847144], "isController": false}, {"data": ["GET", 18607, 9198, 49.43300908260332, 1462.4949750094079, 407, 72694, 420.0, 1606.0, 2696.7999999999956, 28279.67999999982, 0.2146338035517367, 0.08617125288895404, 0.02389477891103319], "isController": false}, {"data": ["PATCH", 18446, 9178, 49.75604467093137, 1451.141494090864, 407, 70472, 420.0, 1554.2999999999993, 2538.5999999999913, 28943.839999999967, 0.2128133847551202, 0.10984650639935939, 0.04497311106748548], "isController": false}, {"data": ["PUT", 18372, 9146, 49.78227737861964, 1397.1625299368563, 407, 71425, 420.0, 1556.0, 2486.0, 28007.0, 0.2119560078452796, 0.1091912571313644, 0.04396811163135243], "isController": false}]}, function(index, item){
+    createTable($("#statisticsTable"), {"supportsControllersDiscrimination": true, "overall": {"data": ["Total", 6077, 5768, 94.91525423728814, 1851.9825571828185, 413, 70159, 419.0, 425.0, 1613.6999999999853, 51541.62000000005, 15.23492927803934, 5.128501627031282, 2.602107709815586], "isController": false}, "titles": ["Label", "#Samples", "FAIL", "Error %", "Average", "Min", "Max", "Median", "90th pct", "95th pct", "99th pct", "Transactions/s", "Received", "Sent"], "items": [{"data": ["Base64 encode test", 1204, 1144, 95.01661129568106, 2160.7267441860463, 413, 70135, 419.0, 425.0, 1729.0, 68965.95000000001, 3.092373088135201, 0.9901144068884922, 0.4288251743312486], "isController": false}, {"data": ["POST", 1223, 1160, 94.84873262469338, 1783.4505314799655, 413, 69880, 419.0, 425.0, 1718.5999999999976, 68178.8, 3.0693553851752395, 1.0542870273933067, 0.614470560508715], "isController": false}, {"data": ["GET", 1230, 1170, 95.1219512195122, 1937.6455284552849, 413, 70048, 419.0, 558.0, 2021.1000000000072, 63482.07000000088, 3.1601664868197936, 1.0480696970864807, 0.3518154096654848], "isController": false}, {"data": ["PATCH", 1213, 1150, 94.80626545754328, 1832.4773289365226, 413, 70159, 419.0, 426.0, 2134.599999999994, 43793.959999999264, 3.073850980312656, 1.0569505610158152, 0.6273777879739698], "isController": false}, {"data": ["PUT", 1207, 1144, 94.7804473902237, 1545.753106876552, 413, 70037, 419.0, 424.0, 1125.7999999999988, 42318.32000000008, 3.1528189910979227, 1.0842432393647867, 0.6311795831787834], "isController": false}]}, function(index, item){
         switch(index){
             // Errors pct
             case 3:
@@ -217,7 +217,7 @@ $(document).ready(function() {
     }, [[0, 0]], 0, summaryTableHeader);
 
     // Create error table
-    createTable($("#errorsTable"), {"supportsControllersDiscrimination": false, "titles": ["Type of error", "Number of errors", "% in errors", "% in all samples"], "items": [{"data": ["503/Service Temporarily Unavailable", 45458, 99.1363894098661, 49.27749894307797], "isController": false}, {"data": ["502/Bad Gateway", 384, 0.8374405722510577, 0.4162646749558261], "isController": false}, {"data": ["504/Gateway Time-out", 12, 0.026170017882845554, 0.013008271092369565], "isController": false}]}, function(index, item){
+    createTable($("#errorsTable"), {"supportsControllersDiscrimination": false, "titles": ["Type of error", "Number of errors", "% in errors", "% in all samples"], "items": [{"data": ["503/Service Temporarily Unavailable", 5763, 99.91331484049931, 94.83297679776206], "isController": false}, {"data": ["502/Bad Gateway", 5, 0.08668515950069348, 0.08227743952608195], "isController": false}]}, function(index, item){
         switch(index){
             case 2:
             case 3:
@@ -228,7 +228,7 @@ $(document).ready(function() {
     }, [[1, 1]]);
 
         // Create top5 errors by sampler
-    createTable($("#top5ErrorsBySamplerTable"), {"supportsControllersDiscrimination": false, "overall": {"data": ["Total", 92249, 45854, "503/Service Temporarily Unavailable", 45458, "502/Bad Gateway", 384, "504/Gateway Time-out", 12, "", "", "", ""], "isController": false}, "titles": ["Sample", "#Samples", "#Errors", "Error", "#Errors", "Error", "#Errors", "Error", "#Errors", "Error", "#Errors", "Error", "#Errors"], "items": [{"data": ["Base64 encode test", 18296, 9150, "503/Service Temporarily Unavailable", 9068, "502/Bad Gateway", 76, "504/Gateway Time-out", 6, "", "", "", ""], "isController": false}, {"data": ["POST", 18528, 9182, "503/Service Temporarily Unavailable", 9102, "502/Bad Gateway", 78, "504/Gateway Time-out", 2, "", "", "", ""], "isController": false}, {"data": ["GET", 18607, 9198, "503/Service Temporarily Unavailable", 9120, "502/Bad Gateway", 78, "", "", "", "", "", ""], "isController": false}, {"data": ["PATCH", 18446, 9178, "503/Service Temporarily Unavailable", 9088, "502/Bad Gateway", 88, "504/Gateway Time-out", 2, "", "", "", ""], "isController": false}, {"data": ["PUT", 18372, 9146, "503/Service Temporarily Unavailable", 9080, "502/Bad Gateway", 64, "504/Gateway Time-out", 2, "", "", "", ""], "isController": false}]}, function(index, item){
+    createTable($("#top5ErrorsBySamplerTable"), {"supportsControllersDiscrimination": false, "overall": {"data": ["Total", 6077, 5768, "503/Service Temporarily Unavailable", 5763, "502/Bad Gateway", 5, "", "", "", "", "", ""], "isController": false}, "titles": ["Sample", "#Samples", "#Errors", "Error", "#Errors", "Error", "#Errors", "Error", "#Errors", "Error", "#Errors", "Error", "#Errors"], "items": [{"data": ["Base64 encode test", 1204, 1144, "503/Service Temporarily Unavailable", 1143, "502/Bad Gateway", 1, "", "", "", "", "", ""], "isController": false}, {"data": ["POST", 1223, 1160, "503/Service Temporarily Unavailable", 1159, "502/Bad Gateway", 1, "", "", "", "", "", ""], "isController": false}, {"data": ["GET", 1230, 1170, "503/Service Temporarily Unavailable", 1170, "", "", "", "", "", "", "", ""], "isController": false}, {"data": ["PATCH", 1213, 1150, "503/Service Temporarily Unavailable", 1148, "502/Bad Gateway", 2, "", "", "", "", "", ""], "isController": false}, {"data": ["PUT", 1207, 1144, "503/Service Temporarily Unavailable", 1143, "502/Bad Gateway", 1, "", "", "", "", "", ""], "isController": false}]}, function(index, item){
         return item;
     }, [[0, 0]], 0);
 
