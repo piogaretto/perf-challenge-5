@@ -15,8 +15,8 @@ services:
       PLAN: "plan-de-pruebas/main.jmx"
       PROPS: "conf.properties"
       RESULTS_FILE: "results/results.jtl"
-      REPORT_DIR: "results/report-html"
-      
+      REPORT_DIR: "results/html-report"
+
     entrypoint: ["/bin/bash","-lc"]
     command: |
       '
@@ -27,7 +27,7 @@ services:
       PLAN=$${PLAN:-plan-de-pruebas/main.jmx}
       PROPS=$${PROPS:-conf.properties}
       RESULTS_FILE=$${RESULTS_FILE:-results/results.jtl}
-      REPORT_DIR=$${REPORT_DIR:-results/report-html}
+      REPORT_DIR=$${REPORT_DIR:-results/html-report}
       
       THRESHOLD_P95=$${THRESHOLD_P95:-800}
       THRESHOLD_ERROR_RATE=$${THRESHOLD_ERROR_RATE:-1.0}
