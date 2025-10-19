@@ -42,6 +42,26 @@ jobs:
             -p conf.properties \
             -l resultados/results.jtl
 
+      - name: Generar HTML
+        run: |
+          set -euxo pipefail
+          jmeter -g resultados/results.jtl \
+            -o resultados/reporte-html
+
+      - name: Subir dashboard HTML
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reporte-rendimiento
+          path: resultados/reporte-html
+
+      - name: Subir archivo JTL
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-jtl
+          path: resultados/results.jtl
+
       - name: Validar métricas (P95 / errores)
         shell: bash
         run: |
@@ -84,23 +104,3 @@ jobs:
 
           chmod +x validar.sh
           LIM_P95=500 LIM_ERR=1.0 ./validar.sh
-
-      - name: Generar HTML
-        run: |
-          set -euxo pipefail
-          jmeter -g resultados/results.jtl \
-            -o resultados/reporte-html
-
-      - name: Subir dashboard HTML
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: reporte-rendimiento
-          path: resultados/reporte-html
-
-      - name: Subir archivo JTL
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: results-jtl
-          path: resultados/results.jtl
