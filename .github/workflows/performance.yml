@@ -1,0 +1,106 @@
+name: Evaluación de rendimiento
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Config Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Descargar y preparar JMeter 5.6.3
+        run: |
+          set -euxo pipefail
+          VERSION=5.6.3
+          curl -fsSL https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-${VERSION}.tgz -o jmeter.tgz
+          tar -xzf jmeter.tgz
+          echo "$PWD/apache-jmeter-${VERSION}/bin" >> $GITHUB_PATH
+
+      - name: Crear carpetas de resultados
+        run: |
+          set -euxo pipefail
+          mkdir -p resultados
+          rm -rf resultados/reporte-html
+
+      - name: Ejecutar pruebas JMeter
+        run: |
+          set -euxo pipefail
+          jmeter -v
+          jmeter -n \
+            -t plan-de-pruebas/main.jmx \
+            -p conf.properties \
+            -l resultados/results.jtl
+
+      - name: Validar métricas (P95 / errores)
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -y
+          sudo apt-get install -y bc coreutils
+
+          cat > validar.sh <<'EOF'
+          #!/usr/bin/env bash
+          set -euo pipefail
+          ARCHIVO="resultados/results.jtl"
+          LIM_P95="${LIM_P95:-500}"
+          LIM_ERR="${LIM_ERR:-1.0}"
+
+          if [[ ! -s "$ARCHIVO" ]]; then
+            echo "ERROR: Archivo JTL vacío o inexistente: $ARCHIVO"
+            exit 1
+          fi
+
+          TOTAL=$(tail -n +2 "$ARCHIVO" | wc -l | tr -d ' ')
+          [[ "$TOTAL" -eq 0 ]] && echo "ERROR: Sin muestras en JTL" && exit 1
+
+          POS=$(awk -v n="$TOTAL" 'BEGIN{printf("%d", (n*95 + 99)/100)}')
+          P95=$(tail -n +2 "$ARCHIVO" | cut -d',' -f2 | sort -n | awk -v p="$POS" 'NR==p{print; exit}')
+
+          ERR=$(tail -n +2 "$ARCHIVO" | awk -F',' '{t++; if($8!="true")e++} END{ if(t==0){print 0}else{printf("%.4f", (e*100.0)/t)} }')
+
+          read INICIO FIN CANT <<< "$(awk -F',' 'NR==2{min=$1;max=$1;tot=0} NR>1{if($1<min)min=$1; if($1>max)max=$1; tot++} END{print min, max, tot}' "$ARCHIVO")"
+          DURACION=$(awk -v mi="$INICIO" -v ma="$FIN" 'BEGIN{print (ma>mi)?(ma-mi)/1000.0:1.0}')
+
+          printf "P95: %.0f ms | Tasa de error: %.2f%%"
+
+          FALLA=0
+          (( $(echo "$P95 > $LIM_P95" | bc -l) )) && echo "FALLA: P95 ($P95 ms) > $LIM_P95 ms" && FALLA=1
+          (( $(echo "$ERR > $LIM_ERR" | bc -l) )) && echo "FALLA: Error rate ($ERR%) > $LIM_ERR%" && FALLA=1
+
+          [[ $FALLA -eq 0 ]] && echo "OK: Todos los umbrales cumplidos"
+          exit $FALLA
+          EOF
+
+          chmod +x validar.sh
+          LIM_P95=500 LIM_ERR=1.0 ./validar.sh
+
+      - name: Generar HTML
+        run: |
+          set -euxo pipefail
+          jmeter -g resultados/results.jtl \
+            -o resultados/reporte-html
+
+      - name: Subir dashboard HTML
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reporte-rendimiento
+          path: resultados/reporte-html
+
+      - name: Subir archivo JTL
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-jtl
+          path: resultados/results.jtl

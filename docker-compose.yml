@@ -1,0 +1,96 @@
+services:
+  jmeter-run:
+    image: justb4/jmeter:5.5
+    container_name: jmeter-run
+    working_dir: /work
+    restart: "no"
+    volumes:
+      - ./:/work:rw
+
+    environment:
+      THRESHOLD_P95: "500"          # ms
+      THRESHOLD_ERROR_RATE: "1.0"   # %
+
+      PLAN: "plan-de-pruebas/main.jmx"
+      PROPS: "conf.properties"
+      RESULTS_FILE: "results/results.jtl"
+      REPORT_DIR: "results/html-report"
+
+    entrypoint: ["/bin/bash","-lc"]
+    command: |
+      '
+      set -euo pipefail
+
+      # Rutas y umbrales (hardcodeados acá; cambiá valores si querés)
+      export JMETER_HOME=/opt/apache-jmeter-5.5
+      PLAN=$${PLAN:-plan-de-pruebas/main.jmx}
+      PROPS=$${PROPS:-conf.properties}
+      RESULTS_FILE=$${RESULTS_FILE:-results/results.jtl}
+      REPORT_DIR=$${REPORT_DIR:-results/html-report}
+      
+      THRESHOLD_P95=$${THRESHOLD_P95:-500}
+      THRESHOLD_ERROR_RATE=$${THRESHOLD_ERROR_RATE:-1.0}
+
+      mkdir -p /work/results
+
+      echo "=== JMeter: non-GUI run ==="
+      if [ ! -f "/work/$${PLAN}" ]; then
+        echo "ERROR: Plan not found: /work/$${PLAN}"
+        exit 2
+      fi
+
+      if [ -f "/work/$${PROPS}" ]; then
+        "$${JMETER_HOME}"/bin/jmeter -n \
+          -t "/work/$${PLAN}" \
+          -p "/work/$${PROPS}" \
+          -l "/work/$${RESULTS_FILE}" -f
+      else
+        "$${JMETER_HOME}"/bin/jmeter -n \
+          -t "/work/$${PLAN}" \
+          -l "/work/$${RESULTS_FILE}"
+      fi
+
+      echo "=== JMeter: HTML report ==="
+      rm -rf "/work/$${REPORT_DIR}" || true
+      "$${JMETER_HOME}"/bin/jmeter -g "/work/$${RESULTS_FILE}" -o "/work/$${REPORT_DIR}"
+
+      echo "=== Validate metrics (P95 / Error%) ==="
+      FILE="/work/$${RESULTS_FILE}"
+      if [ ! -s "$$FILE" ]; then
+        echo "ERROR: JTL empty or missing: $$FILE"
+        exit 2
+      fi
+
+      TOTAL=$(tail -n +2 "$$FILE" | wc -l | tr -d " ")
+      if [ "$$TOTAL" -eq 0 ]; then
+        echo "ERROR: No samples in JTL"
+        exit 2
+      fi
+
+      # P95
+      POS=$(awk -v n="$$TOTAL" "BEGIN{printf(\"%d\", (n*95 + 99)/100)}")
+      P95=$(tail -n +2 "$$FILE" | cut -d, -f2 | sort -n | awk -v p="$$POS" "NR==p{print; exit}")
+
+      # Error %
+      ERR=$(tail -n +2 "$$FILE" | awk -F, "{t++; if(\$8!=\"true\")e++} END{ if(t==0){print 0}else{printf(\"%.2f\", (e*100.0)/t)} }")
+
+      echo "------------------------------------------------------------------"
+      echo "Resultados -> P95: $${P95} ms | Tasa de error: $${ERR}%"
+
+      FAIL=0
+      GT_P95=$(awk -v a="$${P95}" -v b="$${THRESHOLD_P95}" "BEGIN{ if (a>b) print 1; else print 0 }")
+      GT_ERR=$(awk -v a="$${ERR}" -v b="$${THRESHOLD_ERROR_RATE}" "BEGIN{ if (a>b) print 1; else print 0 }")
+
+      [ "$$GT_P95" -eq 1 ] && echo "Límite superado: P95 = $${P95} ms (max $${THRESHOLD_P95} ms)" && FAIL=1
+      [ "$$GT_ERR" -eq 1 ] && echo "Límite superado: Error = $${ERR}% (max $${THRESHOLD_ERROR_RATE}%)" && FAIL=1
+
+      if [ "$$FAIL" -eq 1 ]; then
+        echo "Resultado: PRUEBA FALLIDA"
+        echo "------------------------------------------------------------------"
+        exit 1
+      else
+        echo "Resultado: TODAS LAS MÉTRICAS EN RANGO"
+        echo "------------------------------------------------------------------"
+        exit 0
+      fi
+      '
